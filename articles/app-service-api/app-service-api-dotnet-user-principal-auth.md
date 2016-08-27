@@ -13,14 +13,14 @@
 	ms.tgt_pltfrm="dotnet"
 	ms.devlang="na"
 	ms.topic="article"
-	ms.date="03/04/2016"
-	ms.author="tdykstra"/>
+	ms.date="06/30/2016"
+	ms.author="rachelap"/>
 
 # User authentication for API Apps in Azure App Service
 
 ## Overview
 
-This article shows how to protect an Azure API app so that only authenticated users can call it. The article assumes that have read the [Azure App Service authentication overview](../app-service/app-service-authentication-overview.md).
+This article shows how to protect an Azure API app so that only authenticated users can call it. The article assumes that you have read the [Azure App Service authentication overview](../app-service/app-service-authentication-overview.md).
 
 You'll learn:
 

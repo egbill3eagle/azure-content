@@ -13,7 +13,7 @@
 	ms.tgt_pltfrm="na" 
 	ms.devlang="na" 
 	ms.topic="article" 
-	ms.date="04/18/2016" 
+	ms.date="06/28/2016" 
 	ms.author="spelluru"/>
 
 # Azure Data Factory - Frequently Asked Questions
@@ -35,11 +35,11 @@ See [Data Factory Pricing Details page][adf-pricing-details] for the pricing det
 ### How do I get started with Azure Data Factory?
 
 - For an overview of Azure Data Factory, see [Introduction to Azure Data Factory](data-factory-introduction.md).
-- For a tutorial on how to **copy/move data** using Copy Activity, see [Copy data from Azure Blob Storage to Azure SQL Database](data-factory-get-started.md).
+- For a tutorial on how to **copy/move data** using Copy Activity, see [Copy data from Azure Blob Storage to Azure SQL Database](data-factory-copy-data-from-azure-blob-storage-to-sql-database.md).
 - For a tutorial on how to **transform data** using HDInsight Hive Activity. See [Process data by running Hive script on Hadoop cluster](data-factory-build-your-first-pipeline.md) 
   
 ### What is the Data Factory’s region availability?
-Data Factory is available in **US West** and **North Europe**. The compute and storage services used by data factories can be in other regions. See [Supported regions](data-factory-introduction.md#supported-regions).
+Data Factory is available in **US West** and **North Europe**. The compute and storage services used by data factories can be in other regions. See [Supported regions](data-factory-introduction.md#supported-regions). 
  
 ### What are the limits on number of data factories/pipelines/activities/datasets?
  
@@ -70,6 +70,11 @@ You can author/create data factories using one of the following:
 ### Can I rename a data factory?
 No. Like other Azure resources, the name of an Azure data factory cannot be changed. 
 
+### Can I move a data factory from one Azure subscription to another? 
+Yes. Use the **Move** button on your data factory blade as shown below: 
+
+![Move data factory](media/data-factory-faq/move-data-factory.png)
+
 ## Activities - FAQ
 ### What are the different types of activities you can use in a Data Factory pipeline? 
 
@@ -81,7 +86,12 @@ The **availability** configuration setting in the output data table determines w
 
 ## Copy Activity - FAQ
 ### Is it better to have a pipeline with multiple activities or a separate pipeline for each activity? 
-Pipelines are supposed to bundle related activities.  Logically, you can keep the activities in one pipeline if the tables that connect them are not consumed by any other activity outside the pipeline. This way, you would not need to chain pipeline active periods so that they align with each other. Also, the data integrity in the tables internal to the pipeline will be better preserved when updating the pipeline. Pipeline update essentially stops all the activities within the pipeline, removes them, and creates them again. From authoring perspective, it might also be easier to see the flow of data within the related activities in one JSON file for the pipeline. 
+Pipelines are supposed to bundle related activities.  Logically, you can keep the activities in one pipeline if the tables that connect them are not consumed by any other activity outside the pipeline. This way, you would not need to chain pipeline active periods so that they align with each other. Also, the data integrity in the tables internal to the pipeline will be better preserved when updating the pipeline. Pipeline update essentially stops all the activities within the pipeline, removes them, and creates them again. From authoring perspective, it might also be easier to see the flow of data within the related activities in one JSON file for the pipeline.
+
+### Where is the copy operation performed? 
+
+See [Globally available data movement](data-factory-data-movement-activities.md#global) section for details. In short, when an on-premises data store is involved, the copy operation is perfomed by the Data Management Gateway in your on-premises environment. And, when the data movement is between two cloud stores, the copy operation is performed in the region closest to the sink location in the same geography. 
+
 
 ## HDInsight Activity - FAQ
 
@@ -120,10 +130,39 @@ In the example above, otherLinkedServiceName1 and otherLinkedServiceName2 repres
 
 ## Slices - FAQ
 
+### Why are my input slices are not in Ready state?  
+A common mistake is not setting **external** property to **true** on the input dataset when the input data is external to the data factory (not produced by the data factory). 
+
+In the following example, you only need to set **external** to true on **dataset1**.  
+
+**DataFactory1**
+Pipeline 1: dataset1 -> activity1 -> dataset2 -> activity2 -> dataset3
+Pipeline 2: dataset3-> activity3 -> dataset4
+
+If you have another data factory with a pipeline that takes dataset4 (produced by pipeline 2 in data factory 1), you will need to mark dataset4 as an external dataset because the dataset is produced by a different data factory (DataFactory1, not DataFactory2).  
+
+**DataFactory2**	
+Pipeline 1: dataset4->activity4->dataset5
+
+If the external property is properly set, verify whether the input data exists in the location specified in the input dataset definition. 
+
+### How to run a slice at another time than midnight when the slice is being produced daily?
+Use the **offset** property to specify the time at which you want the slice to be produced. See [Dataset availability](data-factory-create-datasets.md#Availability) section for details about this property. Here is a quick example:
+
+	"availability":
+	{
+	    "frequency": "Day",
+	    "interval": 1,
+	    "offset": "06:00:00"
+	}
+
+Daily slices start at **6 AM** instead of the default midnight. 	
+
 ### How can I rerun a slice?
 You can rerun a slice in one of the following ways: 
 
-- Click **Run** in the command bar on the **DATA SLICE** blade for the slice in the portal. 
+- Use Monitor and Manage App to rerun an activity window or slice. See [Re-run selected activity windows](data-factory-monitor-manage-app.md#re-run-selected-activity-windows) for instructions.   
+- Click **Run** in the command bar on the **DATA SLICE** blade for the slice in the portal.
 - Run **Set-AzureRmDataFactorySliceStatus** cmdlet with Status set to **Waiting** for the slice.   
 	
 		Set-AzureRmDataFactorySliceStatus -Status Waiting -ResourceGroupName $ResourceGroup -DataFactoryName $df -TableName $table -StartDateTime "02/26/2015 19:00:00" -EndDateTime "02/26/2015 20:00:00" 
@@ -131,6 +170,10 @@ You can rerun a slice in one of the following ways:
 See [Set-AzureRmDataFactorySliceStatus][set-azure-datafactory-slice-status] for details about the cmdlet. 
 
 ### How long did it take to process a slice?
+Use Activity Window Explorer in Monitor & Manage App to know how long it took to process a data slice. See [Activity Window Explorer](data-factory-monitor-manage-app.md#activity-window-explorer) for details. 
+
+You can also do the following in the Azure portal:  
+
 1. Click **Datasets** tile on the **DATA FACTORY** blade for your data factory.
 2. Click the specific dataset on the **Datasets** blade.
 3. Select the slice that you are interested in from the **Recent slices** list on the **TABLE** blade.
@@ -144,7 +187,6 @@ If you need to stop the pipeline from executing, you can use [Suspend-AzureRmDat
 If you really want to stop all the executions immediately, the only way would be to delete the pipeline and create it again. If you choose to delete the pipeline, you do NOT need to delete tables and linked services used by the pipeline. 
 
 
-[adf-tutorial]: data-factory-tutorial.md
 [create-factory-using-dotnet-sdk]: data-factory-create-data-factories-programmatically.md
 [msdn-class-library-reference]: https://msdn.microsoft.com/library/dn883654.aspx
 [msdn-rest-api-reference]: https://msdn.microsoft.com/library/dn906738.aspx

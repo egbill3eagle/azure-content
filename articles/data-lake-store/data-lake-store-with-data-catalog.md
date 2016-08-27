@@ -13,7 +13,7 @@
    ms.topic="article"
    ms.tgt_pltfrm="na"
    ms.workload="big-data"
-   ms.date="05/17/2016"
+   ms.date="08/02/2016"
    ms.author="nitinme"/>
 
 # Register data from Data Lake Store in Azure Data Catalog
@@ -34,8 +34,9 @@ Before you begin this tutorial, you must have the following:
 
 - **Azure Data Catalog**. Your organization must already have an Azure Data Catalog created for your organization. Only one catalog is allowed for each organization.
 
-
 ## Register Data Lake Store as a source for Data Catalog
+
+>[AZURE.VIDEO adcwithadl] 
 
 1. Go to `https://azure.microsoft.com/services/data-catalog`, and click **Get started**.
 

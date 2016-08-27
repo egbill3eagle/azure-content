@@ -3,7 +3,7 @@
    description="Tips for securing a database in Azure SQL Data Warehouse for developing solutions."
    services="sql-data-warehouse"
    documentationCenter="NA"
-   authors="sahaj08"
+   authors="ronortloff"
    manager="barbkess"
    editor=""/>
 
@@ -13,10 +13,20 @@
    ms.topic="article"
    ms.tgt_pltfrm="NA"
    ms.workload="data-services"
-   ms.date="05/13/2016"
-   ms.author="sahajs;barbkess;sonyama"/>
+   ms.date="07/22/2016"
+   ms.author="rortloff;barbkess;sonyama"/>
 
 # Secure a database in SQL Data Warehouse
+
+> [AZURE.SELECTOR]
+- [Security Overview](sql-data-warehouse-overview-manage-security.md)
+- [Threat detection](sql-data-warehouse-security-threat-detection.md)
+- [Encryption (Portal)](sql-data-warehouse-encryption-tde.md)
+- [Encryption (T-SQL)](sql-data-warehouse-encryption-tde-tsql.md)
+- [Auditing Overview](sql-data-warehouse-auditing-overview.md)
+- [Auditing downlevel clients](sql-data-warehouse-auditing-downlevel-clients.md)
+
+
 
 This article walks through the basics of securing your Azure SQL Data Warehouse database. In particular, this article will get you started with resources for limiting access, protecting data, and monitoring activities on a database.
 
@@ -24,20 +34,20 @@ This article walks through the basics of securing your Azure SQL Data Warehouse 
 
 Connection Security refers to how you restrict and secure connections to your database using firewall rules and connection encryption.
 
-Firewall rules are used by both the server and the database to reject connection attempts from IP addresses that have not been explicitly whitelisted. To allow connections from your application or client machine's public IP address, you must first create a server-level firewall rule using the Azure Classic Portal, REST API, or PowerShell. As a best practice, you should restrict the IP address ranges allowed through your server firewall as much as possible.  To access Azure SQL Data Warehouse from your local computer, ensure the firewall on your network and local computer allows outgoing communication on TCP port 1433.  For more information, see [Azure SQL Database firewall][].
+Firewall rules are used by both the server and the database to reject connection attempts from IP addresses that have not been explicitly whitelisted. To allow connections from your application or client machine's public IP address, you must first create a server-level firewall rule using the Azure Classic Portal, REST API, or PowerShell. As a best practice, you should restrict the IP address ranges allowed through your server firewall as much as possible.  To access Azure SQL Data Warehouse from your local computer, ensure the firewall on your network and local computer allows outgoing communication on TCP port 1433.  For more information, see [Azure SQL Database firewall][], [sp_set_firewall_rule][], and [sp_set_database_firewall_rule][].
 
 Connections to your SQL Data Warehouse can be encrypted by setting the encryption mode in your connection string.  The syntax for turning on encryption for the connection varies by protocol.  To help you set up your connection string, navigate to your database on the Azure Portal.  Under *Essentials* click on *Show database connection strings*.
 
 
 ## Authentication
 
-Authentication refers to how you prove your identity when connecting to the database. SQL Data Warehouse currently supports SQL Server Authentication with a username and password. Azure Active Directory authentication is available as a preview feature.
+Authentication refers to how you prove your identity when connecting to the database. SQL Data Warehouse currently supports SQL Server Authentication with a username and password as well as a preview of Azure Active Directory. 
 
-When you created the logical server for your database, you specified a "server admin" login with a username and password. Using these credentials, you can authenticate to any database on that server as the database owner, or "dbo."
+When you created the logical server for your database, you specified a "server admin" login with a username and password. Using these credentials, you can authenticate to any database on that server as the database owner, or "dbo" through SQL Server Authentication.
 
-However, as a best practice your organization’s users should use a different account to authenticate. This way you can limit the permissions granted to the application and reduce the risks of malicious activity in case your application code is vulnerable to a SQL injection attack. To create a database user based on server login:
+However, as a best practice, your organization’s users should use a different account to authenticate. This way you can limit the permissions granted to the application and reduce the risks of malicious activity in case your application code is vulnerable to a SQL injection attack. 
 
-First, connect to the master database on your server with your server admin login and create a new server login.
+To create a SQL Server Authenticated user, connect to the **master** database on your server with your server admin login and create a new server login.
 
 ```sql
 -- Connect to master database and create a login
@@ -45,7 +55,7 @@ CREATE LOGIN ApplicationLogin WITH PASSWORD = 'strong_password';
 
 ```
 
-Then, connect to your SQL Data Warehouse database with your server admin login and create a database user based on the server login you just created.
+Then, connect to your **SQL Data Warehouse database** with your server admin login and create a database user based on the server login you just created.
 
 ```sql
 -- Connect to SQL DW database and create a database user
@@ -53,7 +63,7 @@ CREATE USER ApplicationUser FOR LOGIN ApplicationLogin;
 
 ```
 
-For more information on authenticating to a SQL Database, see [Managing databases and logins in Azure SQL Database][] and [Connecting to SQL Database or SQL Data Warehouse By Using Azure Active Directory Authentication][].
+For more information on authenticating to a SQL Database, see [Managing databases and logins in Azure SQL Database][].  For more details on using the Azure AD preview for SQL Data Warehouse, see [Connecting to SQL Data Warehouse By Using Azure Active Directory Authentication][].
 
 
 ## Authorization
@@ -98,17 +108,20 @@ For details and examples on connecting to your SQL Data Warehouse with different
 <!--Image references-->
 
 <!--Article references-->
-[Connect to SQL Data Warehouse]: sql-data-warehouse-develop-connections.md
-[Get started with SQL Database Auditing]: sql-database-auditing-get-started.md
-[Get started with Transparent Data Encryption (TDE)]: sql-data-warehouse-encryption-tde.md
+[Connect to SQL Data Warehouse]: ./sql-data-warehouse-connect-overview.md
+[Get started with SQL Database Auditing]: ./sql-data-warehouse-auditing-overview.md
+[Get started with Transparent Data Encryption (TDE)]: ./sql-data-warehouse-encryption-tde.md
+[Connecting to SQL Data Warehouse By Using Azure Active Directory Authentication]: ./sql-data-warehouse-authentication.md
 
 <!--MSDN references-->
 [Azure SQL Database firewall]: https://msdn.microsoft.com/library/ee621782.aspx
+[sp_set_firewall_rule]: https://msdn.microsoft.com/library/dn270017.aspx
+[sp_set_database_firewall_rule]: https://msdn.microsoft.com/library/dn270010.aspx
 [Database roles]: https://msdn.microsoft.com/library/ms189121.aspx
 [Managing databases and logins in Azure SQL Database]: https://msdn.microsoft.com/library/ee336235.aspx
 [Permissions]: https://msdn.microsoft.com/library/ms191291.aspx
 [Stored procedures]: https://msdn.microsoft.com/library/ms190782.aspx
-[Transparent Data Encryption]: http://go.microsoft.com/fwlink/?LinkId=526242
+[Transparent Data Encryption]: https://go.microsoft.com/fwlink/?LinkId=526242
 [Azure portal]: https://portal.azure.com/
 
 <!--Other Web references-->

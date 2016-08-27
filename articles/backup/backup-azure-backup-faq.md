@@ -14,14 +14,14 @@
 	 ms.tgt_pltfrm="na"
 	 ms.devlang="na"
 	 ms.topic="get-started-article"
-	 ms.date="04/04/2016"
+	 ms.date="08/21/2016"
 	 ms.author="trinadhk; giridham; arunak; markgal; jimpark;"/>
 
 # Azure Backup service- FAQ
 
 > [AZURE.SELECTOR]
 - [Backup FAQ for Classic mode](backup-azure-backup-faq.md)
-- [Backup FAQ for ARM mode](backup-azure-backup-ibiza-faq.md)
+- [Backup FAQ for Resource manager mode](backup-azure-backup-ibiza-faq.md)
 
 This article is a list of commonly asked questions (and the respective answers) about the Azure Backup service. Our community replies quickly, and if a question is asked often, we add it to this article. The answers to questions typically provide reference or support information. You can ask questions about Azure Backup in the Disqus section of this article or a related article. You can also post questions about the Azure Backup service in the [discussion forum](https://social.msdn.microsoft.com/forums/azure/home?forum=windowsazureonlinebackup).
 
@@ -209,7 +209,7 @@ A11. All the data that is backed up is compressed and encrypted before being tra
 A12. Yes, use the **Change Properties** option in the Backup Agent to adjust bandwidth. Adjust the amount of bandwidth and the times when you use that bandwidth. See [Network Throttling](../backup-configure-vault.md#enable-network-throttling), for more information.
 
 **Q13. My internet bandwidth is limited for the amount of data I need to back up. Is there a way I can move data to a certain location with a large network pipe and push that data into Azure?** <br/>
-A13. You can back up data into Azure via the standard online backup process, or you can use the Azure Import/Export service to transfer data to blob storage in Azure. There are no additional ways of getting backup date into Azure storage. For information on how to use the Azure Import/Export service with Azure Backup, please see the [Offline Backup workflow](backup-azure-backup-import-export) article.
+A13. You can back up data into Azure via the standard online backup process, or you can use the Azure Import/Export service to transfer data to blob storage in Azure. There are no additional ways of getting backup date into Azure storage. For information on how to use the Azure Import/Export service with Azure Backup, please see the [Offline Backup workflow](backup-azure-backup-import-export.md) article.
 
 
 ## Recovery
@@ -231,6 +231,9 @@ A3. The encryption key should be at least 16 characters.
 
 **Q4. What happens if I misplace the encryption key? Can I recover the data (or) can Microsoft recover the data?** <br/>
 A4. The key used to encrypt the backup data is present only on the customer premises. Microsoft does not maintain a copy in Azure and does not have any access to the key. If the customer misplaces the key, Microsoft cannot recover the backup data.
+
+**Q5. Is backup data for Azure VMs encrypted?** <br/>
+A5. Azure Backup relies on encryption settings of the Azure VM for backup encryption. If your VM is encrypted using Azure Disk Encryption, Azure Backup uses that encryption to secure your data. 
  
 
 ## Backup cache
@@ -255,7 +258,7 @@ A1. Go sequentially through the bullet list below to change the cache location.
   ```PS C:\> Net start obengine```
 
   Once the backup creation is successfully completed in the new cache location, you can remove the original cache folder.
-  
+
 **Q2. Where can I put the cache-folder for the Azure Backup Agent to work as expected?**<br/>
 A2. The following locations for the cache-folder are not recommended:
 

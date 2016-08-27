@@ -13,10 +13,17 @@
 	ms.tgt_pltfrm="cache-redis" 
 	ms.devlang="na" 
 	ms.topic="hero-article" 
-	ms.date="05/05/2016" 
+	ms.date="07/22/2016" 
 	ms.author="sdanie"/>
 
 # How to create a Web App with Redis Cache
+
+> [AZURE.SELECTOR]
+- [.NET](cache-dotnet-how-to-use-azure-redis-cache.md)
+- [ASP.NET](cache-web-app-howto.md)
+- [Node.js](cache-nodejs-get-started.md)
+- [Java](cache-java-get-started.md)
+- [Python](cache-python-get-started.md)
 
 This tutorial shows how to create and deploy an ASP.NET web application to a web app in Azure App Service using Visual Studio 2015. The sample application displays a list of team statistics from a database and shows different ways to use Azure Redis Cache to store and retrieve data from the cache. When you complete the tutorial you'll have a running web app that reads and writes to a database, optimized with Azure Redis Cache, and hosted in Azure.
 
@@ -688,12 +695,13 @@ Clicking the **Deploy to Azure** button takes you to the Azure portal and initia
 1. On the **Custom deployment** blade, select the Azure subscription to use, and select an existing resource group or create a new one, and specify the resource group location.
 2. On the **Parameters** blade, specify an administrator account name (**ADMINISTRATORLOGIN** - don't use **admin**), administrator login password (**ADMINISTRATORLOGINPASSWORD**), and database name (**DATABASENAME**). The other parameters are configured for a free App Service hosting plan, and lower cost options for the SQL Database and Azure Redis Cache, which don't come with a free tier.
 3. Change any of the other settings if desired, or keep the defaults, and click **OK**.
-4. Once the settings are configured, click **Review legal terms**.
+
 
 ![Deploy to Azure][cache-deploy-to-azure-step-2]
 
-1. Read the terms on the **Create** blade and click **Create**.
-2. To begin provisioning the resources, click **Create** on the **Custom deployment** blade.
+1. Click **Review legal terms**.
+2. Read the terms on the **Purchase** blade and click **Purchase**.
+3. To begin provisioning the resources, click **Create** on the **Custom deployment** blade.
 
 To view the progress of your deployment, click the notification icon and click **Deployment started**.
 
@@ -794,6 +802,8 @@ Once you have selected or created the cache to use, browse to the cache in the A
 ## Next steps
 
 -	Learn more about [Getting Started with ASP.NET MVC 5](http://www.asp.net/mvc/overview/getting-started/introduction/getting-started) on the [ASP.NET](http://asp.net/) site.
+-	For more examples of creating an ASP.NET Web App in App Service, see [Create and deploy an ASP.NET web app in Azure App Service](https://github.com/Microsoft/HealthClinic.biz/wiki/Create-and-deploy-an-ASP.NET-web-app-in-Azure-App-Service) from the [HealthClinic.biz](https://github.com/Microsoft/HealthClinic.biz) 2015 Connect [demo](https://blogs.msdn.microsoft.com/visualstudio/2015/12/08/connectdemos-2015-healthclinic-biz/).
+	-	For more quickstarts from the HealthClinic.biz demo, see [Azure Developer Tools Quickstarts](https://github.com/Microsoft/HealthClinic.biz/wiki/Azure-Developer-Tools-Quickstarts).
 -	Learn more about the [Code first to a new database](https://msdn.microsoft.com/data/jj193542) approach to Entity Framework that's used in this tutorial.
 -	Learn more about [web apps in Azure App Service](../app-service-web/app-service-web-overview.md).
 -	Learn how to [monitor](cache-how-to-monitor.md) your cache in the Azure portal.
@@ -803,6 +813,7 @@ Once you have selected or created the cache to use, browse to the cache in the A
 	-	[How to configure clustering for a Premium Azure Redis Cache](cache-how-to-premium-clustering.md)
 	-	[How to configure Virtual Network support for a Premium Azure Redis Cache](cache-how-to-premium-vnet.md)
 	-	See the [Azure Redis Cache FAQ](cache-faq.md#what-redis-cache-offering-and-size-should-i-use) for more details about size, throughput, and bandwidth with premium caches.
+
 
 
 <!-- IMAGES -->

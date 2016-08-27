@@ -13,8 +13,8 @@
 	ms.tgt_pltfrm="dotnet"
 	ms.devlang="na"
 	ms.topic="article"
-	ms.date="03/04/2016" 
-	ms.author="tdykstra"/>
+	ms.date="06/30/2016" 
+	ms.author="rachelap"/>
 
 # Service principal authentication for API Apps in Azure App Service
 
@@ -403,7 +403,7 @@ For information about how to  create an AngularJS single-page application with a
 
 ## Next steps
 
-This is the last article in the getting started with API Apps series. 
+This is the last tutorial in the API Apps series. 
 
 For more information about Azure Active Directory, see the following resources.
 
